@@ -16,6 +16,9 @@ dotenv.config()
 const app = new Koa()
 const router = new Router()
 
+// Clear console
+process.stdout.write('\x1B[2J\x1B[0f')
+
 router.post('/incoming', async (ctx, next) => {
   const member = await ctx.db.member.getByPhone(ctx.request.body.From)
   if (member) {
