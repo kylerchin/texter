@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "workspaces": ["texter-web", "texter-server"],
+  "name": "texter",
+  "repository": "https://github.com/ianjsikes/texter",
+  "author": "Ian J Sikes",
+  "license": "MIT"
+}

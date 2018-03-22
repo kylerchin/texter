@@ -1,0 +1,5 @@
+export const TWILIO = {
+  COST_PER_MESSAGE: 0.007,
+  NUMBERS: 10,
+  MESSAGES_PER_SECOND: 1,
+}
