@@ -1,0 +1,25 @@
+{
+  "name": "texter-twilio-inbound",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Ian J Sikes",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "micro",
+    "dev": "micro-dev",
+    "deploy:a": "now --force --dotenv --public && now alias \"$(pbpaste)\" texter-twilio-inbound-a",
+    "deploy:b": "now --force --dotenv --public && now alias \"$(pbpaste)\" texter-twilio-inbound-b",
+    "deploy": "yarn deploy:a && yarn deploy:b"
+  },
+  "devDependencies": {
+    "micro-dev": "^2.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "firebase": "^4.12.0",
+    "micro": "^9.1.4",
+    "mongodb": "^3.0.4",
+    "phone-formatter": "^0.0.2"
+  }
+}

@@ -11,8 +11,7 @@
     "deploy": "now --dotenv --public && now alias \"$(pbpaste)\" texter-twilio-outbound"
   },
   "devDependencies": {
-    "micro-dev": "^2.2.2",
-    "nodemon": "^1.17.2"
+    "micro-dev": "^2.2.2"
   },
   "dependencies": {
     "dotenv": "^5.0.1",
