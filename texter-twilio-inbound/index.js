@@ -1,7 +1,8 @@
-const { json, createError, send } = require('micro')
+const { createError, send } = require('micro')
 const Mongo = require('mongodb')
 const phoneFormatter = require('phone-formatter')
 const Firebase = require('firebase')
+const parse = require('urlencoded-body-parser')
 require('dotenv').config()
 
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
@@ -9,7 +10,7 @@ const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
 const ID = (i) => new Mongo.ObjectID(i)
 
 module.exports = async (req, res) => {
-  const body = await json(req)
+  const body = await parse(req)
 
   const db = await setupDatabase()
   const fb = setupFirebase()
