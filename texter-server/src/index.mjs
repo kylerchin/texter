@@ -6,6 +6,7 @@ import bodyParser from 'koa-bodyparser'
 import Mongo from 'mongodb'
 import dotenv from 'dotenv'
 import cors from '@koa/cors'
+import axios from 'axios'
 
 import { FirebaseService } from './firebase'
 import { hasKeys } from './util'
@@ -94,11 +95,6 @@ router.post('/campaigns/:id/test', async (ctx, next) => {
 })
 
 router.post('/campaigns/:id/launch', async (ctx, next) => {
-  const sendMessage = async (ctx, message, member) => {
-    const twilioResponse = await ctx.twilio.sendMessage(message, member)
-    return
-  }
-
   const campaign = await ctx.db.campaign.get(ctx.params.id)
   if (campaign.sent) {
     ctx.status = 402
@@ -114,11 +110,14 @@ router.post('/campaigns/:id/launch', async (ctx, next) => {
   const segment = await ctx.db.segment.get(campaign.segmentId)
 
   try {
-    const messages = segment.members.map((member) =>
-      ctx.twilio
-        .sendMessage(campaign.message, member)
-        .catch((error) => console.log('sendMessage error', error))
-    )
+    await axios({
+      method: 'post',
+      url: 'https://texter-twilio-outbound.now.sh',
+      data: {
+        message: campaign.message,
+        users: segment.members,
+      },
+    })
   } catch (error) {
     console.warn(error)
   } finally {

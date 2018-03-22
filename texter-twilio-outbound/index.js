@@ -8,7 +8,6 @@ const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
 module.exports = async (req, res) => {
   const body = await json(req, { limit: '100mb' })
-  console.log('body', body)
   if (
     !body ||
     !body.message ||
@@ -29,7 +28,6 @@ const main = async (body) => {
     const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN)
 
     for (const user of body.users) {
-      console.log('messaging', user)
       if (!user || typeof user !== 'object' || !user.phone || typeof user.phone !== 'string') {
         console.log('Skipping invalid user', user)
         continue
