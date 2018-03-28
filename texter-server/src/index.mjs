@@ -1,5 +1,3 @@
-// @ts-check
-
 import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
@@ -235,7 +233,11 @@ router.get('/logs/lastweek.csv', async (ctx, next) => {
 })
 
 router.get('/logs/alltime.csv', async (ctx, next) => {
-  ctx.body = await ctx.twilio.getLogs(3650)
+  const now = new Date()
+  const fullDaysSinceEpoch = Math.floor(now / 86400000)
+  const projectStartDays = 17588
+
+  ctx.body = await ctx.twilio.getLogs(fullDaysSinceEpoch - projectStartDays)
 })
 
 app.use(cors())
