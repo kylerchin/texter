@@ -234,6 +234,10 @@ router.get('/logs/lastweek.csv', async (ctx, next) => {
   ctx.body = await ctx.twilio.getLogs()
 })
 
+router.get('/logs/alltime.csv', async (ctx, next) => {
+  ctx.body = await ctx.twilio.getLogs(3650)
+})
+
 app.use(cors())
 app.use(bodyParser())
 

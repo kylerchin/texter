@@ -20,7 +20,7 @@ export class Twilio {
     })
   }
 
-  async getLogs() {
+  async getLogs(daysAgo = 7) {
     const parser = new json2csv.Parser({
       fields: [
         {
@@ -55,7 +55,7 @@ export class Twilio {
       ],
     })
     const d = new Date()
-    d.setTime(d.getTime() - 86400000 * 7)
+    d.setTime(d.getTime() - 86400000 * daysAgo)
     // d.setHours(0, 0, 0, 0)
     const dayBefore = `${d
       .toISOString()
