@@ -10,6 +10,12 @@
     "dev": "micro-dev",
     "deploy": "now --dotenv --public && now alias \"$(pbpaste)\" texter-twilio-outbound"
   },
+  "now": {
+    "name": "texter-twilio-outbound",
+    "alias": "texter-twilio-outbound",
+    "public": true,
+    "dotenv": true
+  },
   "devDependencies": {
     "micro-dev": "^2.2.2"
   },

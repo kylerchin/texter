@@ -91,9 +91,11 @@ export default class MessagesList extends React.Component {
   }
 
   processConvos() {
-    const collateByReplied = collateBy(
-      x => x.messages[x.messages.length - 1].from === 'texter',
-    )((a = [], b) => [...a, b])
+    const lastMessage = convo => convo.messages[convo.messages.length - 1]
+
+    const collateByReplied = collateBy(x => lastMessage(x).from === 'texter')(
+      (a = [], b) => [...a, b],
+    )
 
     const collation = collateByReplied(
       Object.entries(this.props.messages || {}).map(entry => ({
@@ -103,10 +105,19 @@ export default class MessagesList extends React.Component {
       })),
     )
 
-    return {
+    const convos = {
       replied: collation.get(true) || [],
       unreplied: collation.get(false) || [],
     }
+
+    convos.replied.sort(
+      (a, b) => lastMessage(b).timestamp - lastMessage(a).timestamp,
+    )
+    convos.unreplied.sort(
+      (a, b) => lastMessage(b).timestamp - lastMessage(a).timestamp,
+    )
+
+    return convos
   }
 
   render() {

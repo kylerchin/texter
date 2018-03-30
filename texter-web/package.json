@@ -43,6 +43,15 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
+  "now": {
+    "name": "texter-web",
+    "alias": "texter-web",
+    "public": true,
+    "env": {
+      "SERVE_USER": "@serve-user",
+      "SERVE_PASSWORD": "@serve-password"
+    }
+  },
   "devDependencies": {
     "eslint-plugin-prettier": "^2.6.0",
     "prettier": "^1.11.1"
