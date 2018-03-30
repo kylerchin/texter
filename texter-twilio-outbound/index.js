@@ -33,17 +33,21 @@ const main = async (body) => {
         continue
       }
 
-      await client.messages.create({
-        to: phoneFormatter.format(user.phone, '+1NNNNNNNNNN'),
-        messagingServiceSid: process.env.TWILIO_SERVICE_SID,
-        statusCallback: 'https://texter-server.now.sh/twilio',
-        body: format(body.message, user),
-      })
-      await sleep(100)
+      try {
+        await client.messages.create({
+          to: phoneFormatter.format(user.phone, '+1NNNNNNNNNN'),
+          messagingServiceSid: process.env.TWILIO_SERVICE_SID,
+          statusCallback: 'https://texter-server.now.sh/twilio',
+          body: format(body.message, user),
+        })
+        await sleep(100)
+      } catch (twilioError) {
+        console.log('Twilio Error', twilioError)
+      }
     }
 
     console.log('Messages sent.')
   } catch (error) {
-    console.log('error', error)
+    console.log('Unknown Error', error)
   }
 }
