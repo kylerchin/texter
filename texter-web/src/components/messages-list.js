@@ -13,15 +13,9 @@ Span.defaultProps = {
 }
 
 const InboxItemRow = styled(Card)`
-  /* display: flex;
-  flex-direction: row;
-  margin-bottom: 4px;
-  border-bottom: 1px solid rgb(238, 238, 238);
-  padding-bottom: 4px;
-  align-items: center; */
   margin-bottom: 4px;
   background-color: ${props =>
-    props.selected ? '#aaa' : props.replied ? '#ddd' : 'white'};
+    props.selected ? '#aaa' : props['data-replied'] ? '#ddd' : 'white'};
 `
 
 const SidePanel = styled(Box)`
@@ -32,7 +26,7 @@ const SidePanel = styled(Box)`
 
 const InboxItem = ({ member, replied, lastMessage, onClick, selected }) => {
   return (
-    <InboxItemRow replied={replied} selected={selected} onClick={onClick}>
+    <InboxItemRow data-replied={replied} selected={selected} onClick={onClick}>
       <Text style={{ fontWeight: 'bold' }}>{`${member.firstName} ${
         member.lastName
       } — ${member.phone}`}</Text>
@@ -57,10 +51,11 @@ export default class MessagesList extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      !prevProps.messages ||
-      (prevProps.messages[prevState.selectedConvo] !==
-        this.props.messages[this.state.selectedConvo] &&
-        !!this.props.messages[this.state.selectedConvo])
+      this.props.messages &&
+      (!prevProps.messages ||
+        (prevProps.messages[prevState.selectedConvo] !==
+          this.props.messages[this.state.selectedConvo] &&
+          !!this.props.messages[this.state.selectedConvo]))
     ) {
       const messages = this.props.messages[this.state.selectedConvo]
       const processedMessages = this.processMessages(messages)

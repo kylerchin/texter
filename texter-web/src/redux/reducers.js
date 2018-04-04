@@ -5,7 +5,10 @@ export const campaigns = (state = {}, action) =>
   produce(state, draft => {
     switch (action.type) {
       case 'LOAD_CAMPAIGNS':
-        action.payload.forEach(campaign => (draft[campaign._id] = campaign))
+        action.payload.forEach(
+          campaign =>
+            (draft[campaign._id] = { ...draft[campaign._id], ...campaign }),
+        )
         break
       case 'ADD_CAMPAIGN_SUCCESS':
         draft[action.payload._id] = action.payload
@@ -38,7 +41,10 @@ export const segments = (state = {}, action) =>
         }
         break
       case 'LOAD_SEGMENTS':
-        action.payload.forEach(segment => (draft[segment._id] = segment))
+        action.payload.forEach(
+          segment =>
+            (draft[segment._id] = { ...draft[segment._id], ...segment }),
+        )
         break
       case 'LOAD_SEGMENT_MEMBERS':
         {
