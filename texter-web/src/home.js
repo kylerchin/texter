@@ -119,6 +119,15 @@ class Home extends Component {
       )
     }
 
+    const segments = Object.values(this.props.segments).map(segment => {
+      const localUnread = localStorage.getItem(segment._id)
+      if (!localUnread || localUnread < segment.unread) {
+        return { ...segment, hasUnread: true }
+      }
+
+      return segment
+    })
+
     return (
       <Flex mx={-2} flexWrap={'wrap'} justifyContent="center">
         <Col>
@@ -182,10 +191,11 @@ class Home extends Component {
               <FA name="plus-circle" size="2x" />
             </NavLink>
           </Toolbar>
-          {Object.values(this.props.segments).map(segment => (
+          {segments.map(segment => (
             <SegmentCard
               key={segment._id}
               name={segment.name}
+              hasUnread={segment.hasUnread}
               lastCampaignName="Test Campaign"
               numMembers={segment.numMembers}
               numUnread={segment.unread}

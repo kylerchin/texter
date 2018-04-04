@@ -236,6 +236,9 @@ class Segment extends Component {
     }
 
     const { segment } = this.props
+
+    localStorage.setItem(segment._id, segment.unread)
+
     return (
       <Flex justifyContent="center" style={{ height: '100%' }}>
         <Box

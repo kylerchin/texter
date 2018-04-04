@@ -2,10 +2,17 @@ import React from 'react'
 import { Flex, Box, Card, Badge, Text, Subhead, Small } from 'rebass'
 import FA from 'react-fontawesome'
 
-export default ({ onPress, name, lastCampaignName, numMembers, numUnread }) => {
+export default ({
+  onPress,
+  name,
+  lastCampaignName,
+  numMembers,
+  numUnread,
+  hasUnread,
+}) => {
   return (
     <Box p={2} onClick={onPress}>
-      <Card>
+      <Card style={{ position: 'relative', overflow: 'visible' }}>
         <Flex>
           <Box flex="1">
             <Subhead>{name}</Subhead>
@@ -22,6 +29,17 @@ export default ({ onPress, name, lastCampaignName, numMembers, numUnread }) => {
             </Badge>
           </Box>
         </Flex>
+        {hasUnread && (
+          <FA
+            name="exclamation-circle"
+            style={{
+              position: 'absolute',
+              top: -5,
+              left: -5,
+              color: 'orange',
+            }}
+          />
+        )}
       </Card>
     </Box>
   )

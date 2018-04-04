@@ -18,6 +18,10 @@ export default class App extends Component {
     super(props)
 
     service.store.dispatch({ type: 'INIT' })
+
+    setInterval(() => {
+      service.store.dispatch({ type: 'INIT' })
+    }, 10000)
   }
 
   render() {
