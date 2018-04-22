@@ -10,6 +10,9 @@ import {
   ButtonTransparent,
   Tabs,
   Tab,
+  Subhead,
+  Row,
+  Column,
 } from 'rebass'
 import FA from 'react-fontawesome'
 import styled from 'styled-components'
@@ -95,6 +98,31 @@ class Segment extends Component {
       editSegmentPopupOpen: true,
       segmentNameField: this.props.segment.name,
     })
+  }
+
+  renderAnalytics() {
+    const { segment } = this.props
+
+    const total = segment.messagesTotal || segment.numMembers
+    const unknown = segment.messagesUnknown || 0
+    const queued = segment.messagesQueued || 0
+    const sent = segment.messagesSent || 0
+    const failed = segment.messagesFailed || 0
+    const delivered = segment.messagesDelivered || 0
+
+    return (
+      <Box>
+        <Subhead>Analytics</Subhead>
+        <Row mt={3}>
+          <Column>{`Total: ${total}`}</Column>
+          <Column>{`Unknown: ${unknown}`}</Column>
+          <Column>{`Queued: ${queued}`}</Column>
+          <Column>{`Sent: ${sent}`}</Column>
+          <Column>{`Failed: ${failed}`}</Column>
+          <Column>{`Delivered: ${delivered}`}</Column>
+        </Row>
+      </Box>
+    )
   }
 
   renderDeletePopup() {
@@ -262,6 +290,7 @@ class Segment extends Component {
               <FA name="minus-circle" size="2x" />
             </ButtonTransparent>
           </Flex>
+          {this.renderAnalytics()}
           <Card
             style={{
               flex: 1,

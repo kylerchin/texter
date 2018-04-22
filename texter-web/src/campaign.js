@@ -162,23 +162,23 @@ class Campaign extends Component {
     if (!this.props.campaign.sent || !segment) {
       return null
     }
-    const sent = segment.numMembers
-    const delivered = segment.messagesDelivered
-    const failed = segment.messagesFailed
-    const pending =
-      segment.numMembers -
-        (segment.messagesDelivered + segment.messagesFailed) || undefined
+    const total = segment.messagesTotal || segment.numMembers
+    const unknown = segment.messagesUnknown || 0
+    const queued = segment.messagesQueued || 0
+    const sent = segment.messagesSent || 0
+    const failed = segment.messagesFailed || 0
+    const delivered = segment.messagesDelivered || 0
 
     return (
       <Box>
         <Subhead>Analytics</Subhead>
         <Row mt={3}>
-          <Column>{`${sent} sent`}</Column>
-          <Column>
-            {delivered !== undefined ? `${delivered} delivered` : null}
-          </Column>
-          <Column>{failed !== undefined ? `${failed} failed` : null}</Column>
-          <Column>{pending !== undefined ? `${pending} pending` : null}</Column>
+          <Column>{`Total: ${total}`}</Column>
+          <Column>{`Unknown: ${unknown}`}</Column>
+          <Column>{`Queued: ${queued}`}</Column>
+          <Column>{`Sent: ${sent}`}</Column>
+          <Column>{`Failed: ${failed}`}</Column>
+          <Column>{`Delivered: ${delivered}`}</Column>
         </Row>
       </Box>
     )

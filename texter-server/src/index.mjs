@@ -99,13 +99,17 @@ router.post('/campaigns/:id/launch', async (ctx, next) => {
     return
   }
   await ctx.db.campaign.launch(ctx.params.id)
+  const segment = await ctx.db.segment.get(campaign.segmentId)
   await ctx.db.segment.update(campaign.segmentId, {
     lastCampaignSent: campaign._id,
     lastCampaignTime: Date.now(),
     messagesDelivered: 0,
     messagesFailed: 0,
+    messagesSent: 0,
+    messagesQueued: 0,
+    messagesUnknown: 0,
+    messagesTotal: segment.members.length || 0,
   })
-  const segment = await ctx.db.segment.get(campaign.segmentId)
 
   try {
     await axios({
@@ -225,6 +229,12 @@ router.post('/segments/:segId/members/:id/messages', async (ctx, next) => {
   const member = await ctx.db.member.get(ctx.params.id)
   const { sid } = await ctx.twilio.sendMessage(message, member)
   await ctx.fb.sendMessage(message, member, sid)
+
+  const segment = await ctx.db.segment.get(member.segmentId)
+  await ctx.db.segment.update(member.segmentId, {
+    messagesTotal: (segment.messagesTotal || 0) + 1,
+  })
+
   ctx.status = 200
 })
 

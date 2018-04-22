@@ -15,7 +15,7 @@ export class Twilio {
     return this.client.messages.create({
       to: phoneFormatter.format(recipient.phone, '+1NNNNNNNNNN'),
       messagingServiceSid: process.env.TWILIO_SERVICE_SID,
-      statusCallback: 'https://texter-server.now.sh/twilio',
+      statusCallback: 'https://texter-twilio-status.now.sh/',
       body,
     })
   }

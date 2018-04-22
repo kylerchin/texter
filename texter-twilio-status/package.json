@@ -1,0 +1,31 @@
+{
+  "name": "texter-twilio-status",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Ian J Sikes",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "micro",
+    "dev": "micro-dev",
+    "deploy": "now --dotenv --public && now alias \"$(pbpaste)\" texter-twilio-status"
+  },
+  "now": {
+    "name": "texter-twilio-status",
+    "alias": "texter-twilio-status",
+    "public": true,
+    "dotenv": true
+  },
+  "devDependencies": {
+    "micro-dev": "^2.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "micro": "^9.1.4",
+    "mongodb": "^3.0.7",
+    "phone-formatter": "^0.0.2",
+    "string-template": "^1.0.0",
+    "twilio": "^3.13.1",
+    "urlencoded-body-parser": "^2.0.1"
+  }
+}
