@@ -242,12 +242,24 @@ router.get('/logs/lastweek.csv', async (ctx, next) => {
   ctx.body = await ctx.twilio.getLogs()
 })
 
+router.get('/logs/lastweek-incoming.csv', async (ctx, next) => {
+  ctx.body = await ctx.twilio.getIncomingLogs()
+})
+
 router.get('/logs/alltime.csv', async (ctx, next) => {
   const now = new Date()
   const fullDaysSinceEpoch = Math.floor(now / 86400000)
   const projectStartDays = 17588
 
   ctx.body = await ctx.twilio.getLogs(fullDaysSinceEpoch - projectStartDays)
+})
+
+router.get('/logs/alltime-incoming.csv', async (ctx, next) => {
+  const now = new Date()
+  const fullDaysSinceEpoch = Math.floor(now / 86400000)
+  const projectStartDays = 17588
+
+  ctx.body = await ctx.twilio.getIncomingLogs(fullDaysSinceEpoch - projectStartDays)
 })
 
 app.use(cors())

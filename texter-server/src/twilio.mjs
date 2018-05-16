@@ -68,34 +68,63 @@ export class Twilio {
     return csv
   }
 
-  // async getLogs() {
-  //   return new Promise((resolve, reject) => {
+  async getIncomingLogs(daysAgo = 7) {
+    const parser = new json2csv.Parser({
+      fields: [
+        {
+          value: (row, field) =>
+            row.from
+              .split('+1')
+              .splice(-1, 1)
+              .join(''),
+          stringify: false,
+          label: 'From',
+        },
+        {
+          value: (row, field) =>
+            row.to
+              .split('+1')
+              .splice(-1, 1)
+              .join(''),
+          stringify: false,
+          label: 'To',
+        },
+        { value: 'body', label: 'Body' },
+        { value: 'status', label: 'Status' },
+        { value: 'dateSent', label: 'SentDate' },
+        { value: 'apiVersion', label: 'ApiVersion' },
+        { value: 'numSegments', label: 'NumSegments' },
+        { value: 'errorCode', label: 'ErrorCode', default: 0 },
+        { value: 'accountSid', label: 'AccountSid' },
+        { value: 'sid', label: 'Sid' },
+        { value: 'direction', label: 'Direction' },
+        { value: 'price', label: 'Price' },
+        { value: 'priceUnit', label: 'PriceUnit' },
+      ],
+    })
+    const d = new Date()
+    d.setTime(d.getTime() - 86400000 * daysAgo)
+    const dayBefore = `${d
+      .toISOString()
+      .split('.')
+      .splice(0, 1)
+      .join('')}+00:00`
 
-  //     const dayBefore = `${new Date(Date.now() - 86400000 * 2)
-  //       .toISOString()
-  //       .split('.')
-  //       .splice(0, 1)
-  //       .join('')}-07:00`
-  //       // const l = await this.client.messages.list({ dateSentAfter: dayBefore })
-  //       // console.log('l', l.length)
-  //       // return 'foo'
-  //       request(
-  //         {
-  //           url: `https://${process.env.TWILIO_SID}:${
-  //             process.env.TWILIO_AUTH_TOKEN
-  //           }@api.twilio.com/2010-04-01/Accounts/${
-  //             process.env.TWILIO_SID
-  //           }/Messages.csv?DateSent%3E=${encodeURIComponent(dayBefore)}`,
-  //         },
-  //         (error, response, body) => {
-  //           if (error) {
-  //             console.log('ERROR!', error)
-  //           }
+    const phoneNumbers = await this.client.incomingPhoneNumbers.list()
+    const result = await Promise.all(
+      phoneNumbers.map((p) => {
+        return this.client.messages.list({ dateSentAfter: dayBefore, to: p.phoneNumber })
+      })
+    )
 
-  //           console.log('body', body)
-  //         }
-  //       )
-  //       return 'foo'
-  //     }
-  //   })
+    const sorted = result.reduce((acc, val) => acc.concat(val), []).sort((a, b) => {
+      const aDate = new Date(a.dateCreated)
+      const bDate = new Date(b.dateCreated)
+
+      return aDate - bDate
+    })
+
+    const csv = parser.parse(sorted)
+    return csv
+  }
 }
