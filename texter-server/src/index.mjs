@@ -112,13 +112,22 @@ router.post('/campaigns/:id/launch', async (ctx, next) => {
   })
 
   try {
+    let data = {
+      message: campaign.message,
+      users: segment.members,
+    }
+    if (
+      !!campaign.mediaUrl &&
+      typeof campaign.mediaUrl === 'string' &&
+      campaign.mediaUrl.indexOf('http') != -1
+    ) {
+      data.mediaUrl = campaign.mediaUrl.trim()
+    }
+
     await axios({
       method: 'post',
       url: 'https://texter-twilio-outbound.now.sh',
-      data: {
-        message: campaign.message,
-        users: segment.members,
-      },
+      data,
     })
   } catch (error) {
     console.warn(error)
@@ -225,10 +234,10 @@ router.del('/segments/:segId/members/:id', async (ctx, next) => {
 })
 
 router.post('/segments/:segId/members/:id/messages', async (ctx, next) => {
-  const { message } = ctx.request.body
+  const { message, mediaUrl } = ctx.request.body
   const member = await ctx.db.member.get(ctx.params.id)
   const { sid } = await ctx.twilio.sendMessage(message, member)
-  await ctx.fb.sendMessage(message, member, sid)
+  await ctx.fb.sendMessage(message, member, sid, mediaUrl)
 
   const segment = await ctx.db.segment.get(member.segmentId)
   await ctx.db.segment.update(member.segmentId, {

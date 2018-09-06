@@ -38,13 +38,21 @@ export class FirebaseService {
       })
   }
 
-  async sendMessage(message, recipient, sid) {
-    await this.db.ref(`segments/${recipient.segmentId}/messages/${recipient._id}/${sid}`).set({
+  async sendMessage(message, recipient, sid, mediaUrl) {
+    let msgObj = {
       to: recipient.phone,
       body: format(message, recipient),
       from: 'texter',
       timestamp: Date.now(),
-    })
+    }
+
+    if (!!mediaUrl && typeof mediaUrl === 'string' && mediaUrl.indexOf('http') != -1) {
+      msgObj.mediaUrl = mediaUrl.trim()
+    }
+
+    await this.db
+      .ref(`segments/${recipient.segmentId}/messages/${recipient._id}/${sid}`)
+      .set(msgObj)
   }
 
   async setMessageStatus(phone, sid, status, member) {

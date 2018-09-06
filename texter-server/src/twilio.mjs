@@ -9,15 +9,21 @@ export class Twilio {
     this.client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN)
   }
 
-  async sendMessage(message, recipient) {
+  async sendMessage(message, recipient, mediaUrl) {
     const body = format(message, recipient)
 
-    return this.client.messages.create({
+    let msgObj = {
       to: phoneFormatter.format(recipient.phone, '+1NNNNNNNNNN'),
       messagingServiceSid: process.env.TWILIO_SERVICE_SID,
       statusCallback: 'https://texter-twilio-status.now.sh/',
       body,
-    })
+    }
+
+    if (!!mediaUrl && typeof mediaUrl === 'string' && mediaUrl.indexOf('http') != -1) {
+      msgObj.mediaUrl = mediaUrl.trim()
+    }
+
+    return this.client.messages.create(msgObj)
   }
 
   async getLogs(daysAgo = 7) {

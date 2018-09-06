@@ -18,6 +18,7 @@ class Home extends Component {
     campaignTitle: '',
     campaignMessage: '',
     campaignSegment: '',
+    campaignMediaUrl: '',
     segmentName: '',
     segmentFile: {},
     showSent: false,
@@ -30,6 +31,7 @@ class Home extends Component {
         campaignTitle: '',
         campaignMessage: '',
         campaignSegment: '',
+        campaignMediaUrl: '',
       })
 
     return (
@@ -48,6 +50,11 @@ class Home extends Component {
             type: 'TEXTAREA',
           },
           {
+            name: 'Media URL',
+            value: this.state.campaignMediaUrl,
+            update: e => this.setState({ campaignMediaUrl: e.target.value }),
+          },
+          {
             name: 'Segment',
             value: this.state.campaignSegment,
             update: e => this.setState({ campaignSegment: e.target.value }),
@@ -63,6 +70,7 @@ class Home extends Component {
           this.props.addCampaign({
             title: this.state.campaignTitle,
             message: this.state.campaignMessage,
+            mediaUrl: this.state.campaignMediaUrl,
             segmentId: seg._id,
           })
         }}
@@ -225,9 +233,9 @@ const mapDispatchToProps = {
       members: members.filter(m => !!m.firstName && !!m.lastName && !!m.phone),
     },
   }),
-  addCampaign: ({ title, message, segmentId }) => ({
+  addCampaign: ({ title, message, segmentId, mediaUrl }) => ({
     type: 'ADD_CAMPAIGN',
-    payload: { title, message, segmentId },
+    payload: { title, message, segmentId, mediaUrl },
   }),
   // goToCampaign: id => ({ type: "GO_TO_CAMPAIGN", payload: id })
 }

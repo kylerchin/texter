@@ -30,6 +30,7 @@ class Campaign extends Component {
     titleField: '',
     segmentField: '',
     messageField: '',
+    mediaUrlField: '',
   }
 
   showDeletePopup() {
@@ -44,6 +45,7 @@ class Campaign extends Component {
       titleField: this.props.campaign.title,
       segmentField: this.props.segments[this.props.campaign.segmentId].name,
       messageField: this.props.campaign.message,
+      mediaUrlField: this.props.campaign.mediaUrl,
     })
   }
 
@@ -78,6 +80,7 @@ class Campaign extends Component {
         titleField: '',
         segmentField: '',
         messageField: '',
+        mediaUrlField: '',
       })
 
     return (
@@ -102,6 +105,11 @@ class Campaign extends Component {
             update: e => this.setState({ messageField: e.target.value }),
             type: FIELD_TYPE.TEXTAREA,
           },
+          {
+            name: 'Media URL',
+            value: this.state.mediaUrlField,
+            update: e => this.setState({ mediaUrlField: e.target.value }),
+          },
         ]}
         onClose={close}
         onConfirm={() => {
@@ -111,11 +119,21 @@ class Campaign extends Component {
           this.props.editCampaign(this.props.campaign._id, {
             title: this.state.titleField,
             message: this.state.messageField,
+            mediaUrl: this.state.mediaUrlField,
             segmentId: seg._id,
           })
         }}
         confirmText="Save"
       />
+    )
+  }
+
+  isMediaUrlSet() {
+    const mediaUrl = this.props.campaign.mediaUrl
+    return (
+      !!mediaUrl &&
+      typeof mediaUrl === 'string' &&
+      mediaUrl.indexOf('http') != -1
     )
   }
 
@@ -128,11 +146,15 @@ class Campaign extends Component {
       return null
     }
 
+    const costPerMessage = this.isMediaUrlSet()
+      ? TWILIO.COST_PER_MMS
+      : TWILIO.COST_PER_SMS
+
     const reach = segment.numMembers
-    const cost = (segment.numMembers * TWILIO.COST_PER_MESSAGE).toLocaleString(
-      'en-US',
-      { style: 'currency', currency: 'USD' },
-    )
+    const cost = (segment.numMembers * costPerMessage).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    })
     const time = formatDuration(
       segment.numMembers / (TWILIO.NUMBERS * TWILIO.MESSAGES_PER_SECOND),
     )
@@ -228,6 +250,16 @@ class Campaign extends Component {
           </Subhead>
           <Label mt={3}>Message</Label>
           <Blockquote>{campaign.message}</Blockquote>
+          {this.isMediaUrlSet() ? (
+            <React.Fragment>
+              <Label mt={3}>Media URL</Label>
+              <Blockquote>
+                <a target="_blank" href={campaign.mediaUrl}>
+                  {campaign.mediaUrl}
+                </a>
+              </Blockquote>
+            </React.Fragment>
+          ) : null}
           <Box flex={1} />
           {this.renderAnalytics()}
           <Box flex={1} />

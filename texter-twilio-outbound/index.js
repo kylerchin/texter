@@ -22,6 +22,10 @@ module.exports = async (req, res) => {
   send(res, 200)
 }
 
+const hasMediaUrl = (body) => {
+  return !!body.mediaUrl && typeof body.mediaUrl === 'string' && body.mediaUrl.indexOf('http') != -1
+}
+
 const main = async (body) => {
   try {
     console.log(`Messaging ${body.users.length} users...`)
@@ -34,12 +38,16 @@ const main = async (body) => {
       }
 
       try {
-        await client.messages.create({
+        let msgObj = {
           to: phoneFormatter.format(user.phone, '+1NNNNNNNNNN'),
           messagingServiceSid: process.env.TWILIO_SERVICE_SID,
           statusCallback: 'https://texter-twilio-status.now.sh/',
           body: format(body.message, user),
-        })
+        }
+        if (hasMediaUrl(body)) {
+          msgObj.mediaUrl = body.mediaUrl.trim()
+        }
+        await client.messages.create(msgObj)
         await sleep(100)
       } catch (twilioError) {
         console.log('Twilio Error', twilioError)
