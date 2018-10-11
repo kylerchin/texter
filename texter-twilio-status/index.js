@@ -8,13 +8,16 @@ const ID = (i) => new Mongo.ObjectID(i)
 
 const setupDatabase = () => {
   return new Promise((resolve, reject) => {
-    Mongo.MongoClient.connect(process.env.DATABASE_URL, (err, client) => {
-      if (err) {
-        reject(err)
-      }
+    Mongo.MongoClient.connect(
+      process.env.DATABASE_URL,
+      (err, client) => {
+        if (err) {
+          reject(err)
+        }
 
-      resolve(client.db('texter-db'))
-    })
+        resolve(client.db('texter-db'))
+      }
+    )
   })
 }
 
@@ -24,23 +27,14 @@ setupDatabase().then((d) => {
   db = d
 })
 
-module.exports = async (req, res) => {
-  const message = await parse(req)
-
+const handleValidMessage = async (message) => {
   if (!db) {
     db = await setupDatabase()
-  }
-
-  if (!message || !message.MessageStatus || !message.To) {
-    console.error('Invalid message object received', JSON.stringify(message, null, 2))
-    send(res, 400)
-    return
   }
 
   const member = await getMemberByPhone(db, message.To)
   if (!member) {
     console.error('Unable to find member associated with message', message)
-    send(res, 400)
     return
   }
 
@@ -68,6 +62,18 @@ module.exports = async (req, res) => {
       console.warn('Unknown message status:', JSON.stringify(message, null, 2))
       break
   }
+}
+
+module.exports = async (req, res) => {
+  const message = await parse(req)
+
+  if (!message || !message.MessageStatus || !message.To) {
+    console.error('Invalid message object received', JSON.stringify(message, null, 2))
+    send(res, 400)
+    return
+  }
+
+  handleValidMessage(message)
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8')
   send(res, 200)

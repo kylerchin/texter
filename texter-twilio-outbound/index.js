@@ -31,6 +31,7 @@ const main = async (body) => {
     console.log(`Messaging ${body.users.length} users...`)
     const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN)
 
+    let successfulMessages = 0
     for (const user of body.users) {
       if (!user || typeof user !== 'object' || !user.phone || typeof user.phone !== 'string') {
         console.log('Skipping invalid user', user)
@@ -49,12 +50,13 @@ const main = async (body) => {
         }
         await client.messages.create(msgObj)
         await sleep(100)
+        successfulMessages++
       } catch (twilioError) {
         console.log('Twilio Error', twilioError)
       }
     }
 
-    console.log('Messages sent.')
+    console.log(successfulMessages + ' messages sent successfully.')
   } catch (error) {
     console.log('Unknown Error', error)
   }
