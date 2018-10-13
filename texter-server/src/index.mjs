@@ -272,7 +272,13 @@ router.get('/logs/alltime-incoming.csv', async (ctx, next) => {
 })
 
 app.use(cors())
-app.use(bodyParser())
+app.use(
+  bodyParser({
+    formLimit: '2mb',
+    jsonLimit: '2mb',
+    textLimit: '2mb',
+  })
+)
 
 /**
  * Logger middleware
