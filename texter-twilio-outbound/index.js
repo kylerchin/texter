@@ -49,7 +49,6 @@ const main = async (body) => {
           msgObj.mediaUrl = body.mediaUrl.trim()
         }
         await client.messages.create(msgObj)
-        await sleep(100)
         successfulMessages++
       } catch (twilioError) {
         console.log('Twilio Error', twilioError)
