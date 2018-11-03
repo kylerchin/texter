@@ -73,7 +73,7 @@ export const FormPopup = ({
       <Button
         mr={2}
         bg="#3a9"
-        disabled={fields.some(field => !field.value)}
+        disabled={fields.some(field => !field.optional && !field.value)}
         onClick={() => {
           onConfirm()
           onClose()

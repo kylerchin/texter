@@ -53,6 +53,7 @@ class Home extends Component {
             name: 'Media URL',
             value: this.state.campaignMediaUrl,
             update: e => this.setState({ campaignMediaUrl: e.target.value }),
+            optional: true,
           },
           {
             name: 'Segment',
