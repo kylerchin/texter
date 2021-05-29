@@ -1,0 +1,52 @@
+#Texter App
+
+This app relies on Firebase's stack of Realtime Database, Hosting, Functions, and Firestore, and interacts with Twilio via it's api.
+
+### Setup Process
+
+## Twilio
+
+1. Buy a phone number
+2. Set up Messaging Service
+3. Copy required Env Variables
+
+you'll need
+- your Twilio Account SID
+- your Twilio Auth Token (to authenticate requests)
+
+You'll need to group your phone numbers together and get the 
+- Messaging group SID
+
+##  Set Environmental Variables
+
+You'll need to set the Firebase Functions Twilio Env Variables like so:
+
+```
+firebase functions:config:set twilio.accountsid=sidxxxx twilio.authtoken=authtokenxxxxx
+
+```
+
+## Set your Messaging Group Request URLs and Callback URLs like so:
+
+Click Messaging Service-> Intergration -> Send a webhook
+Request URL: 
+```
+https://us-central1-<project-id-firebase>.cloudfunctions.net/twilioIncomingMessage```
+```
+
+Delivery Status Callback URL: 
+```
+Request URL: 
+```
+https://us-central1-<project-id-firebase>.cloudfunctions.net/callbackTwilioStatus```
+```
+
+Your HTTP Function URLs may vary because of your region / configuration. Check your firebase functions page for confirmation.
+
+## Dependencies lol
+https://www.twilio.com/
+Buy a few phone numbers, maybe one, maybe 5000. 
+
+## Development Guidelines
+
+Use ONLY well supported packages. no "updated 56 months ago" unless it's <100 lines of code.
